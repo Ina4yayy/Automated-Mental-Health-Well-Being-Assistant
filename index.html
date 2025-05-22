@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Detection</title>
+    <style>
+        :root {
+            --primary: #6b5ce7;
+            --primary-light: #8a7eea;
+            --secondary: #72ebd9;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --bg-light: #f9f9f9;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin: 1rem 0;
+            color: var(--primary);
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+
+        .content-section {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .content-section h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(107, 92, 231, 0.1);
+        }
+
+        .quiz-form, .emotion-form {
+            margin-top: 1.5rem;
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+        }
+
+        .question p {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .results {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 150px;
+            font-size: 1rem;
+        }
+
+        .resources {
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .counselor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .counselor-card {
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .counselor-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #888;
+        }
+
+        footer {
+            background-color: var(--primary);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Mental Health Detection</h1>
+            <p>Understand and improve your mental well-being through interactive tools, AI-powered analysis, and professional support.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="features">
+            <div class="feature-card" data-target="quiz-section">
+                <div class="icon">📝</div>
+                <h3>Self-Assessment Quizzes</h3>
+                <p>Evaluate your mental state with our scientifically designed quizzes.</p>
+            </div>
+
+            <div class="feature-card" data-target="emotion-section">
+                <div class="icon">🤖</div>
+                <h3>Mental Health Chatbot</h3>
+                <p>Seek help from our AI-powered Mental Health Chatbot</p>
+            </div>
+
+            <div class="feature-card" data-target="support-section">
+                <div class="icon">💡</div>
+                <h3>Personalized Well-being Support</h3>
+                <p>Get tailored resources and tips based on your assessments.</p>
+            </div>
+
+            <div class="feature-card" data-target="counselor-section">
+                <div class="icon">📞</div>
+                <h3>Contact Counselors</h3>
+                <p>Find professional help suited to your specific needs.</p>
+            </div>
+        </section>
+
+       <!-- Self-Assessment Quiz Section -->
+<section id="quiz-section" class="content-section">
+    <h2>Mental Health Self-Assessment</h2>
+    <p>This brief quiz can help you understand your current mental state. Answer honestly for the most accurate results.</p>
+    
+    <form class="quiz-form" id="mental-health-quiz">
+        <!-- Question 1 -->
+        <div class="question">
+            <p>1. Over the past two weeks, how often have you felt down, depressed, or hopeless?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q1" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q1" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q1" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q1" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question">
+            <p>2. Over the past two weeks, how often have you had little interest or pleasure in doing things?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q2" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q2" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q2" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q2" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question">
+            <p>3. Over the past two weeks, how often have you felt nervous, anxious, or on edge?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q3" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q3" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q3" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q3" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="question">
+            <p>4. Over the past two weeks, how often have you not been able to stop or control worrying?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q4" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q4" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q4" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q4" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="question">
+            <p>5. Over the past two weeks, how often have you had trouble relaxing?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q5" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q5" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q5" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q5" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="question">
+            <p>6. Over the past two weeks, how often have you had difficulty sleeping or overslept?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q6" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q6" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q6" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q6" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="question">
+            <p>7. Over the past two weeks, how often have you felt tired or had low energy?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q7" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q7" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q7" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q7" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <!-- Question 8 -->
+        <div class="question">
+            <p>8. Over the past two weeks, how often have you had trouble concentrating?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q8" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q8" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q8" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q8" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <!-- Question 9 -->
+        <div class="question">
+            <p>9. Over the past two weeks, how often have you felt bad about yourself or felt like a failure?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q9" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q9" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q9" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q9" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <!-- Question 10 -->
+        <div class="question">
+            <p>10. Over the past two weeks, how often have you avoided friends or social situations?</p>
+            <div class="options">
+                <label class="radio-option"><input type="radio" name="q10" value="0"> Not at all</label>
+                <label class="radio-option"><input type="radio" name="q10" value="1"> Several days</label>
+                <label class="radio-option"><input type="radio" name="q10" value="2"> More than half the days</label>
+                <label class="radio-option"><input type="radio" name="q10" value="3"> Nearly every day</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn">Submit Quiz</button>
+    </form>
+
+    <div class="results" id="quiz-results">
+        <h3>Your Assessment Results</h3>
+        <p id="score-interpretation"></p>
+        <p>Remember, this is not a clinical diagnosis. For detailed assessment, please consult with a mental health professional.</p>
+        <button class="btn btn-secondary" id="view-suggestions">View Personalized Suggestions</button>
+    </div>
+</section>
+
+            <!-- Personalized Well-being Support Section -->
+<section id="support-section" class="content-section">
+  <h2>Personalized Well-being Support</h2>
+  <p>Select your symptom level to receive personalized well-being resources:</p>
+
+<style>
+  #symptom-select {
+    background-color: #7E57C2; /* Deep Purple */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    margin: 10px 0;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='white' d='M4 6l4 4 4-4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+  }
+
+  #symptom-select:focus {
+    outline: none;
+    box-shadow: 0 0 5px #B39DDB;
+  }
+</style>
+
+
+
+<label for="symptom-select">Choose your symptom level:</label>
+<select id="symptom-select" onchange="updateRecommendations()">
+  <option value="minimal">Minimal</option>
+  <option value="mild">Mild</option>
+  <option value="moderate">Moderate</option>
+  <option value="severe">Severe</option>
+</select>
+
+
+  <div id="recommendations" class="resources"></div>
+</section>
+
+<script>
+  const data = {
+    minimal: {
+      mindfulness: [
+        "Try the 5-4-3-2-1 grounding technique",
+        "Practice 10 minutes of meditation daily",
+        "Mindful journaling and nature walks"
+      ],
+      selfCare: [
+        "Maintain a consistent sleep schedule",
+        "Walk or cycle 30 minutes daily",
+        "Balanced meals, limited caffeine"
+      ],
+      cognitive: [
+        "Use a thought diary for small worries",
+        "Practice daily affirmations",
+        "Reflect on positive moments"
+      ],
+      reading: [
+        "The Little Book of Mindfulness by Patrizia Collard",
+        "The Happiness Trap by Russ Harris"
+      ]
+    },
+    mild: {
+      mindfulness: [
+        "Guided meditation (10–15 mins/day)",
+        "Gratitude journaling",
+        "Progressive muscle relaxation (PMR)"
+      ],
+      selfCare: [
+        "30 minutes brisk walking 4–5x/week",
+        "Regular meals with omega-3 foods",
+        "Avoid skipping meals"
+      ],
+      cognitive: [
+        "Challenge negative thoughts",
+        "Use self-compassion exercises",
+        "Limit screen time before bed"
+      ],
+      reading: [
+        "Feeling Good by David D. Burns",
+        "The Mindful Way Through Depression by Mark Williams"
+      ]
+    },
+    moderate: {
+      mindfulness: [
+        "20-minute guided meditations",
+        "Mindful breathing during distress",
+        "Digital detox for 1–2 hours/day"
+      ],
+      selfCare: [
+        "Aerobic exercises or jogging 4x/week",
+        "Meal prepping with leafy greens",
+        "Avoid alcohol, eat magnesium-rich foods"
+      ],
+      cognitive: [
+        "Begin CBT exercises",
+        "Track moods with journaling",
+        "Use self-encouragement scripts"
+      ],
+      reading: [
+        "Lost Connections by Johann Hari",
+        "Rewire Your Anxious Brain by Catherine M. Pittman"
+      ]
+    },
+    severe: {
+      mindfulness: [
+        "Short meditations (5 min) during crisis",
+        "RAIN technique: Recognize, Allow, Investigate, Nurture",
+        "Soothing sensory toolkit"
+      ],
+      selfCare: [
+        "Gentle stretches or chair yoga",
+        "Scheduled nutritious meals",
+        "Avoid caffeine and alcohol"
+      ],
+      cognitive: [
+        "Daily mood tracking with a therapist",
+        "Join a support group or use teletherapy",
+        "Practice acceptance techniques (ACT)"
+      ],
+      reading: [
+        "Man’s Search for Meaning by Viktor Frankl",
+        "Reasons to Stay Alive by Matt Haig",
+        "The Body Keeps the Score by Bessel van der Kolk"
+      ]
+    }
+  };
+
+  function updateRecommendations() {
+    const level = document.getElementById("symptom-select").value;
+    const content = data[level];
+    const container = document.getElementById("recommendations");
+    
+    container.innerHTML = `
+      <div class="resource-card">
+        <h4>Mindfulness Techniques</h4>
+        <ul>${content.mindfulness.map(item => `<li>${item}</li>`).join("")}</ul>
+      </div>
+      <div class="resource-card">
+        <h4>Self-Care Practices</h4>
+        <ul>${content.selfCare.map(item => `<li>${item}</li>`).join("")}</ul>
+      </div>
+      <div class="resource-card">
+        <h4>Cognitive Techniques</h4>
+        <ul>${content.cognitive.map(item => `<li>${item}</li>`).join("")}</ul>
+      </div>
+      <div class="resource-card">
+        <h4>Recommended Reading</h4>
+        <ul>${content.reading.map(item => `<li>${item}</li>`).join("")}</ul>
+      </div>
+    `;
+  }
+
+  // Load initial content
+  window.onload = updateRecommendations;
+</script>
+
+
+        
+        <!-- AI-Driven Emotional Analysis Section -->
+         
+    <section id="emotion-section" class="content-section">
+      <h2>AI Mental Health Chatbot</h2>
+      <p>Talk to our AI chatbot about your thoughts and feelings. It’s here to support you and provide helpful insights.</p>
+
+      <form id="chat-form" class="emotion-form">
+        <div class="question">
+          <p>What's on your mind?</p>
+          <textarea id="user-input" placeholder="Type your message here..." required></textarea>
+        </div>
+        <button type="submit" class="btn">Send</button>
+      </form>
+
+      <div class="results" id="chat-response">
+        <h3>Chatbot Response</h3>
+        <p id="response-text" style="white-space: pre-wrap;"></p>
+        
+      </div>
+    </section>
+
+
+   
+
+        
+
+            
+        <!-- Connect with Counselors Section -->
+        <section id="counselor-section" class="content-section">
+            <h2>Connect with Professional Counselors</h2>
+            <p>Our network of licensed mental health professionals is ready to provide the support you need. Choose a counselor that matches your preferences.</p>
+            
+           <div class="counselor-grid">
+
+    <div class="counselor-card">
+        <div class="counselor-img">👨‍⚕️</div>
+        <h4>Dr. Prakash Kothari</h4>
+        <p>Senior Psychiatrist & Sexologist</p>
+        <p>35+ years of experience</p>
+        <p>📞 +91-9876543210</p>
+    </div>
+
+    <div class="counselor-card">
+        <div class="counselor-img">👩‍⚕️</div>
+        <h4>Dr. Anagha Joshi</h4>
+        <p>Child & Adolescent Psychiatrist</p>
+        <p>18+ years of experience</p>
+        <p>📞 +91-9876543211</p>
+    </div>
+
+    <div class="counselor-card">
+        <div class="counselor-img">👨‍⚕️</div>
+        <h4>Dr. Rajendra Barve</h4>
+        <p>Consultant Psychiatrist & Author</p>
+        <p>30+ years of experience</p>
+        <p>📞 +91-9876543212</p>
+    </div>
+
+    <div class="counselor-card">
+        <div class="counselor-img">👩‍⚕️</div>
+        <h4>Dr. Rupal Patel</h4>
+        <p>Clinical Psychologist, NLP Practitioner</p>
+        <p>15+ years of experience</p>
+        <p>📞 +91-9876543213</p>
+    </div>
+
+    <div class="counselor-card">
+        <div class="counselor-img">👨‍⚕️</div>
+        <h4>Dr. Ashwin Porwal</h4>
+        <p>Psychiatrist & Mindfulness Trainer</p>
+        <p>20+ years of experience</p>
+        <p>📞 +91-9876543214</p>
+    </div>
+
+    <div class="counselor-card">
+        <div class="counselor-img">👩‍⚕️</div>
+        <h4>Dr. Aruna Patki</h4>
+        <p>Clinical Psychologist & CBT Expert</p>
+        <p>10+ years of experience</p>
+        <p>📞 +91-9876543215</p>
+    </div>
+
+    <div class="counselor-card">
+        <div class="counselor-img">👨‍⚕️</div>
+        <h4>Dr. Manoj Bapat</h4>
+        <p>Consultant Psychiatrist, Stress Disorders</p>
+        <p>22+ years of experience</p>
+        <p>📞 +91-9876543216</p>
+    </div>
+
+    <div class="counselor-card">
+        <div class="counselor-img">👩‍⚕️</div>
+        <h4>Dr. Snehal Chitale</h4>
+        <p>Clinical Psychologist & Trauma Specialist</p>
+        <p>12+ years of experience</p>
+        <p>📞 +91-9876543217</p>
+    </div>
+
+
+</div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <p>Need immediate help? Call our 24/7 helpline:</p>
+                <h3>1-800-123-4567</h3>
+                <p>If you're experiencing a mental health emergency, please call 988 or go to your nearest emergency room.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Mental Health Detection | A tool to help you understand and improve your mental well-being</p>
+            <p>Disclaimer: This application is not a substitute for professional medical advice, diagnosis, or treatment.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Feature card click handling
+            const featureCards = document.querySelectorAll('.feature-card');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            featureCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    
+                    // Hide all content sections
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show selected content section
+                    document.getElementById(targetId).classList.add('active');
+                    
+                    // Scroll to the section
+                    document.getElementById(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+                 // Quiz submission handling
+const mentalHealthQuiz = document.getElementById('mental-health-quiz');
+const quizResults = document.getElementById('quiz-results');
+const scoreInterpretation = document.getElementById('score-interpretation');
+const viewSuggestions = document.getElementById('view-suggestions');
+
+mentalHealthQuiz.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    let score = 0;
+    const formData = new FormData(mentalHealthQuiz);
+
+    for (let value of formData.values()) {
+        score += parseInt(value);
+    }
+
+    // Interpret score out of max 30 (10 questions, 0–3 scale)
+    let interpretation = '';
+    if (score >= 0 && score <= 6) {
+        interpretation = 'Your responses suggest MINIMAL symptoms of anxiety and depression. Continue maintaining your mental well-being with regular self-care practices.';
+    } else if (score >= 7 && score <= 14) {
+        interpretation = 'Your responses suggest MILD symptoms of anxiety and depression. Consider incorporating stress-reduction techniques into your daily routine.';
+    } else if (score >= 15 && score <= 22) {
+        interpretation = 'Your responses suggest MODERATE symptoms of anxiety and depression. You might benefit from talking to a mental health professional about these symptoms.';
+    } else {
+        interpretation = 'Your responses suggest more SEVERE symptoms of anxiety and depression. We strongly recommend consulting with a mental health professional for proper evaluation and support.';
+    }
+
+    scoreInterpretation.textContent = interpretation;
+    quizResults.style.display = 'block';
+
+    // Scroll to results
+    quizResults.scrollIntoView({
+        behavior: 'smooth'
+    });
+});
+
+// View suggestions button
+viewSuggestions.addEventListener('click', function() {
+    // Show support section
+    contentSections.forEach(section => {
+        section.classList.remove('active');
+    });
+    document.getElementById('support-section').classList.add('active');
+
+    // Scroll to the section
+    document.getElementById('support-section').scrollIntoView({
+        behavior: 'smooth'
+    });
+});
+            // View suggestions button
+            viewSuggestions.addEventListener('click', function() {
+                // Show support section
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById('support-section').classList.add('active');
+                
+                // Scroll to the section
+                document.getElementById('support-section').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+
+            // Emotion analysis form handling
+            const emotionForm = document.getElementById('emotion-analysis-form');
+            const emotionResults = document.getElementById('emotion-results');
+            const emotionInterpretation = document.getElementById('emotion-interpretation');
+            const viewEmotionSuggestions = document.getElementById('view-emotion-suggestions');
+
+            emotionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const emotionText = document.getElementById('emotion-text').value;
+                
+                // Simple emotion analysis (in a real app, this would use NLP or a sentiment analysis API)
+                let emotionAnalysis = simulateEmotionAnalysis(emotionText);
+                
+                emotionInterpretation.innerHTML = emotionAnalysis;
+                emotionResults.style.display = 'block';
+                
+                // Scroll to results
+                emotionResults.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+
+            // View emotion suggestions button
+            viewEmotionSuggestions.addEventListener('click', function() {
+                // Show support section
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById('support-section').classList.add('active');
+                
+                // Scroll to the section
+                document.getElementById('support-section').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+
+            // Simple emotion analysis function (placeholder for actual NLP/ML analysis)
+            function simulateEmotionAnalysis(text) {
+                if (!text || text.trim() === '') {
+                    return '<p>Please enter some text for analysis.</p>';
+                }
+
+                // Very simplified analysis for demonstration purposes
+                const lowerText = text.toLowerCase();
+                const wordCount = text.split(' ').length;
+                
+                // Check for emotion-related words
+                const emotionWords = {
+                    positive: ['happy', 'good', 'great', 'excellent', 'joy', 'excited', 'love', 'peaceful', 'calm', 'hopeful'],
+                    negative: ['sad', 'bad', 'terrible', 'awful', 'depressed', 'anxious', 'worried', 'stressed', 'angry', 'frustrated'],
+                    neutral: ['okay', 'fine', 'alright', 'normal', 'average']
+                };
+                
+                let positiveCount = 0;
+                let negativeCount = 0;
+                let neutralCount = 0;
+                
+                emotionWords.positive.forEach(word => {
+                    const regex = new RegExp('\\b' + word + '\\b', 'gi');
+                    const matches = lowerText.match(regex);
+                    if (matches) positiveCount += matches.length;
+                });
+                
+                emotionWords.negative.forEach(word => {
+                    const regex = new RegExp('\\b' + word + '\\b', 'gi');
+                    const matches = lowerText.match(regex);
+                    if (matches) negativeCount += matches.length;
+                });
+                
+                emotionWords.neutral.forEach(word => {
+                    const regex = new RegExp('\\b' + word + '\\b', 'gi');
+                    const matches = lowerText.match(regex);
+                    if (matches) neutralCount += matches.length;
+                });
+                
+                let dominantEmotion = 'neutral';
+                if (positiveCount > negativeCount && positiveCount > neutralCount) {
+                    dominantEmotion = 'positive';
+                } else if (negativeCount > positiveCount && negativeCount > neutralCount) {
+                    dominantEmotion = 'negative';
+                }
+                
+                let expressionLevel = 'moderate';
+                const totalEmotionWords = positiveCount + negativeCount + neutralCount;
+                const emotionDensity = totalEmotionWords / wordCount;
+                
+                if (emotionDensity > 0.2) {
+                    expressionLevel = 'strong';
+                } else if (emotionDensity < 0.1) {
+                    expressionLevel = 'subtle';
+                }
+                
+                // Generate analysis HTML
+                let analysisHTML = `
+                    <div>
+                        <p>Your text expresses a <strong>${expressionLevel} ${dominantEmotion}</strong> emotional state.</p>
+                        <div style="margin: 15px 0;">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <span style="width: 100px;">Positive:</span>
+                                <div style="flex-grow: 1; background-color: #f0f0f0; height: 20px; border-radius: 10px; overflow: hidden;">
+                                    <div style="width: ${Math.min(100, (positiveCount / (positiveCount + negativeCount + neutralCount || 1)) * 100)}%; background-color: #4CAF50; height: 100%;"></div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <span style="width: 100px;">Negative:</span>
+                                <div style="flex-grow: 1; background-color: #f0f0f0; height: 20px; border-radius: 10px; overflow: hidden;">
+                                    <div style="width: ${Math.min(100, (negativeCount / (positiveCount + negativeCount + neutralCount || 1)) * 100)}%; background-color: #f44336; height: 100%;"></div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <span style="width: 100px;">Neutral:</span>
+                                <div style="flex-grow: 1; background-color: #f0f0f0; height: 20px; border-radius: 10px; overflow: hidden;">
+                                    <div style="width: ${Math.min(100, (neutralCount / (positiveCount + negativeCount + neutralCount || 1)) * 100)}%; background-color: #2196F3; height: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Note: This is a simplified demonstration. A production system would use advanced NLP and machine learning for more accurate analysis.</p>
+                    </div>
+                `;
+                
+                return analysisHTML;
+            }
+        });
+        
+document.addEventListener('DOMContentLoaded', function () {
+  const chatForm = document.getElementById('chat-form');
+  const userInput = document.getElementById('user-input');
+  const chatResponse = document.getElementById('chat-response');
+  const responseText = document.getElementById('response-text');
+
+  chatForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const input = userInput.value.trim();
+    if (!input) return;
+
+    responseText.textContent = "Analyzing...";
+    chatResponse.style.display = 'block';
+
+    try {
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: input })
+      });
+
+      const data = await res.json();
+      responseText.textContent = data.response || "Sorry, no response from chatbot.";
+    } catch (error) {
+      responseText.textContent = "Error: Unable to connect to chatbot.";
+      console.error(error);
+    }
+  });
+});
+
+    </script>
+</body>
+</html>
